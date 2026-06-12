@@ -1,5 +1,4 @@
 
-```markdown
 # stm32f401-drivers
 
 Register-level drivers for STM32F401RE. No HAL, no LL.
