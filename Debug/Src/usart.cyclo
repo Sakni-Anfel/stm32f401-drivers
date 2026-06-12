@@ -1,0 +1,6 @@
+../Src/usart.c:26:6:usart2_init	1
+../Src/usart.c:44:6:usart2_write	2
+../Src/usart.c:56:5:usart2_data_exist	1
+../Src/usart.c:60:6:usart2_read	2
+../Src/usart.c:72:6:usart2_baudrate	1
+../Src/usart.c:75:6:usart2_IRQHandler	6
