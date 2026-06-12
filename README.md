@@ -1,4 +1,4 @@
-You're right — that was too generic and AI-looking. Here's a clean, no-fluff README that a real embedded engineer would write:
+
 
 ```markdown
 # stm32f401-drivers
