@@ -11,6 +11,8 @@
 #define GPIOB_PB5_LED_GREEN (1U<<5)//for the odr
 
 #define GPIOC_PC13_BUTTON	(1U<<13)//for idr
+
+
 void gpio_init(void ){
 
 	RCC_GPIO_ENB |=GPIOA;
@@ -22,18 +24,22 @@ void gpio_init(void ){
 	//GPIOB_MODER |=0x400UL;output pin PB5
 	GPIOB_MODER |=(1U<<10);
 	GPIOB_MODER &= ~(1U<<11);
-	//GPIOC INTPUT PIN P13
+	//GPIOC INTPUT PIN PC13
 	GPIOC_MODER &= ~(1U<<26);
 	GPIOC_MODER &= ~(1U<<27);
 //PA5
 	GPIOA_MODER |=(1U<<10);
 	GPIOA_MODER &=~(1U<<11);
 	//pa2 tx AF7 for usart
+	GPIOA_MODER |=(1U<<5);
+	GPIOA_MODER &=~(1U<<4);
 	GPIOA_AFRL |=(1U<<8);
 	GPIOA_AFRL |=(1U<<9);
 	GPIOA_AFRL |=(1U<<10);
 	GPIOA_AFRL &= ~(1U<<11);
 	//pa3 rx af7 for usart
+	GPIOA_MODER |=(1U<<7);
+	GPIOA_MODER &=~(1U<<6);
 	GPIOA_AFRL |=(1U<<12);
 	GPIOA_AFRL |=(1U<<13);
 	GPIOA_AFRL |=(1U<<14);
@@ -79,11 +85,11 @@ void button_state_set(int *prgm_state){
 if (!(GPIOC_IDR & GPIOC_PC13_BUTTON)){
 
 	if(*prgm_state== OFF){
-		*prgm_state== ON;
+		*prgm_state= ON;
 		for(int i=0; i<1500000;i++);
 	}
 	else if(*prgm_state== ON){
-		*prgm_state == OFF;
+		*prgm_state = OFF;
 		for(int i=0; i<1500000;i++);
 	}
 }
@@ -106,3 +112,4 @@ if(*prgm_state== OFF){
 void delay(int ms){
 	for(int i=0; i<(ms*1500);i++);
 }
+
