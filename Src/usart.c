@@ -33,13 +33,16 @@ void usart2_init(void){
 	USART2_CR1 |=CR1_TE;
 	USART2_CR1 |=CR1_RE;
 	USART2_CR1 |=CR1_UE;
+	USART2_CR1 |=CR1_RXNEIE;
+
+
 
 	rx_writeISR_buffer=0;
 	rx_read_buffer=0;
 	tx_write_buffer=0;
 	tx_readISR_buffer=0;
 
-
+	NVIC_ISER1 |=ISER1;
 }
 void usart2_write(char ch){
 	while (tx_buffer_counter >= BUFFER_SIZE);// WE HAVE TO WAIT IF IT FULL
@@ -52,6 +55,13 @@ void usart2_write(char ch){
 while(!(USART2_STATUS & SR_TXE));// to check if the transmiting data register is not empty, it is used to check the usart hardware if its empty in real time, we need to add a buffer checker
 USART2_DR=(ch & 0xFF);// to say we are only able to send 8 bits at a time so if its a big data will be splited , base on reference, read directly from the usart
 */
+}
+void usart2_write_string(char *str){
+	int i=0;
+	while (str[i] != '\0'){
+		usart2_write(str[i]);
+		i++;
+	}
 }
 int usart2_data_exist(void){
 	return rx_buffer_counter > 0;//return the buffer count cause it is the number of byte we are going to read
@@ -69,10 +79,25 @@ char usart2_read(void){//bch nektbou
 while (!(USART2_STATUS & SR_RXNE));//to make sure that the rx register not empty
 return USART2_DR;*/
 }
+void usart2_read_string(char *buff , int len_max){
+	int i=0;
+	while(1){
+		char ch =usart2_read();
+
+		if(ch == '\r' || ch =='\n' || (len_max-1)==i){//WE ADD LEN_max-1 so the uart be aware of its limit so we prevent the overflow problem so the las buff[i] is always 0 cause thats the end and the limit
+
+			buff[i]='\0';
+			break;
+		}else {
+
+			buff[i]=ch;i++;
+		}
+	}
+}
 void usart2_baudrate(uint32_t clock, uint32_t baud_rate){
 	USART2_BAUD= ((clock+ ( baud_rate/2U)) / baud_rate);
 }
-void usart2_IRQHandler(void){
+void USART2_IRQHandler(void){
 if (USART2_STATUS & SR_RXNE){
 	char data = USART2_DR;
 	if(rx_buffer_counter < BUFFER_SIZE){
