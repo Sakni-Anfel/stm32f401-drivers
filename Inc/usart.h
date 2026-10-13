@@ -28,12 +28,22 @@
 #define CR1_UE					(1U<<13)
 #define CR1_TE					(1U<<3)
 #define CR1_RE					(1U<<2)
+#define CR1_RXNEIE				(1U<<5)
+#define CR1_TXEIE				(1U<<7)
+
+#define NVIC_ISER1_OFFSET 				(0x00000104UL)
+#define NVIC_ISER1						(*(volatile uint32_t * )(nvic+NVIC_ISER1_OFFSET ))
+
+#define ISER1					(1U<<6)
 
 //functions
 void usart2_init(void);
 void usart2_write(char ch);
-void usart2_IRQHandler(void);
+void usart2_write_string(char *str);
+void usart2_read_string(char *buff , int len_max);
+void USART2_IRQHandler(void);
 char usart2_read(void);
 int usart2_data_exist(void);
 void usart2_baudrate(uint32_t clock, uint32_t baud_rate);
+
 #endif /* USART_H_ */
